@@ -272,7 +272,11 @@ class Tablero
   		respuesta = gets.chomp
   			if respuesta == "s"
   				@tablero = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
+  				if self.menu == "1"
   				self.jugar
+  			 	elsif self.menu == "2"
+  			 	self.modo
+  			 	end	
   			else
   				@tablero = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
   				puts "Gracias por jugar"
@@ -304,12 +308,74 @@ class Tablero
 	puts "2) Contra jugador"
 	modo = gets.chomp
 	if modo == "1"
-		self.modo_ia
+		@tablero = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
+		self.modo
 	elsif modo == "2"
+		@tablero = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
 		self.jugar
 	end								
   end
+  # Jugador IA
+  #
+  def compu
+  		begin
+			numeroF = %w[ 0 1 2]
+		  	num_aleatF = rand(numeroF.length)
+		  	fila = numeroF[num_aleatF]
+		  	fila = fila.to_i
+		  	numeroC = %w[ 0 1 2]
+		  	num_aleatC = rand(numeroC.length)
+		  	columna = numeroC[num_aleatC]
+		  	columna = columna.to_i
+		end while !self.marcar(self.turno, fila, columna)
+		self.marcar(self.turno, fila, columna)
+  end
+  # Jugadas en modo ia
+  #
+  def modo
+  	self.turno = 1
+	self.solicitar_nombre_j1
+	begin
+		if se_acabo? == false
+		self.dibujar_tablero
+	  	self.marca_modo
+	  	end
+	  	if se_acabo? == false
+	  	self.dibujar_tablero
+	  	self.compu
+	  	end
+	  	self.turno = ((self.turno == 1) ? 2 : 1)
+	end while !se_acabo?
+	self.dibujar_tablero
+	self.acabar_el_juego
+  end
+  # Solista marca de jugador 1 en modo ia
+  #
+  def marca_modo
+  	begin
+	  	puts "Te toca jugardor #{self.jugador1}"
+	  	puts "En que fila"
+	  	fila = gets.chomp
+	  	fila = fila.to_i
+	  	puts "En que columna"
+	  	columna = gets.chomp
+	    columna = columna.to_i
+  	end while !self.marcar(self.turno, fila, columna)
+  	self.turno = ((self.turno == 1) ? 2 : 1)
+  end
+
+  # nada
+  #
+  def ahorro(dias=365)
+  	centavos = 1
+  	contador = 0
+  	print centavos
+	begin
+		contador = contador + centavos
+		centavos += 1
+	end while centavos <= dias
+    contador
+  end	
 end
 
-
-
+t = Tablero.new
